@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 from recipes.permissions import IsRecipeAuthor
@@ -20,7 +20,7 @@ class CreateRecipeView(ListCreateAPIView):
 
 class UpdateRecipeView(RetrieveUpdateDestroyAPIView):
     serializer_class = RecipeSerializer
-    permission_classes = (IsAuthenticated, IsRecipeAuthor)
+    permission_classes = (IsAuthenticated, IsRecipeAuthor | IsAdminUser)
 
     def get_object(self):
         recipe = RecipesManager.get_recipe(self.kwargs["recipe_id"])

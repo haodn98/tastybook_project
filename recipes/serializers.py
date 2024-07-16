@@ -38,6 +38,7 @@ class RecipeSerializer(serializers.Serializer):
         return recipe
 
     def update(self, instance, validated_data):
+        validated_data["is_vegan"] = utils.check_if_vegan(validated_data.get("ingredients"))
         recipe = RecipesManager.update_recipe(instance["_id"], validated_data)
         return recipe
 
