@@ -4,6 +4,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from recipes.permissions import IsRecipeAuthor
 from recipes.serializers import RecipeSerializer, RecipeFilterSerializer
 from recipes.manager import RecipesManager
 
@@ -19,10 +20,11 @@ class CreateRecipeView(ListCreateAPIView):
 
 class UpdateRecipeView(RetrieveUpdateDestroyAPIView):
     serializer_class = RecipeSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsRecipeAuthor)
 
     def get_object(self):
         recipe = RecipesManager.get_recipe(self.kwargs["recipe_id"])
+        self.check_object_permissions(request=self.request, obj=recipe)
         return recipe
 
     def destroy(self, request, *args, **kwargs):

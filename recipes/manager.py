@@ -86,3 +86,8 @@ class RecipesManager(MongoManager):
     def recipe_filter(cls, query):
         cursor = cls.db.find(query)
         return cls.to_list(cursor)
+
+    @classmethod
+    def is_author(cls, user_id, recipe_id):
+        recipe = cls.get_recipe(recipe_id)
+        return recipe.get("author") == user_id

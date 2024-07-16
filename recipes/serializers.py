@@ -10,7 +10,8 @@ class RecipeSerializer(serializers.Serializer):
     ingredients = serializers.DictField()
     complexity = serializers.IntegerField(min_value=1, max_value=5)
     process = serializers.ListField(child=serializers.CharField(), min_length=1)
-    is_vegan = serializers.BooleanField(required=False)
+    author = serializers.IntegerField(read_only=True)
+    is_vegan = serializers.BooleanField(required=False, read_only=True)
 
     def validate(self, attrs):
         ingredients = attrs["ingredients"]
