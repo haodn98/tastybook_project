@@ -34,6 +34,10 @@ urlpatterns = [
          )
     ,
     path(
+        "api/subscription/", include("subscriptions.urls", namespace="subscriptions")
+    )
+    ,
+    path(
         'api/schema/',
         SpectacularAPIView.as_view(),
         name='schema'

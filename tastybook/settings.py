@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'recipes',
     'products',
+    'subscriptions',
 
 ]
 
