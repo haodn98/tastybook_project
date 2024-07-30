@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from products.models import Product
-from recipes import utils
 from recipes.manager import RecipesManager
+from recipes.utils import Utils
 
 
 class RecipeSerializer(serializers.Serializer):
@@ -32,13 +32,13 @@ class RecipeSerializer(serializers.Serializer):
                 "complexity": validated_data.pop("complexity"),
                 "process": validated_data.pop("process"),
                 "author": self.context["request"].user.id,
-                "is_vegan": utils.check_if_vegan(validated_data.pop("ingredients"))
+                "is_vegan": Utils.check_if_vegan(validated_data.pop("ingredients"))
             }
         )
         return recipe
 
     def update(self, instance, validated_data):
-        validated_data["is_vegan"] = utils.check_if_vegan(validated_data.get("ingredients"))
+        validated_data["is_vegan"] = Utils.check_if_vegan(validated_data.get("ingredients"))
         recipe = RecipesManager.update_recipe(instance["_id"], validated_data)
         return recipe
 

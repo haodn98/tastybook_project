@@ -4,7 +4,7 @@ from subscriptions.models import Subscription
 from recipes.manager import RecipesManager
 
 
-class CreateSubscriptionSerializer(serializers.ModelSerializer):
+class SubscriptionSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:

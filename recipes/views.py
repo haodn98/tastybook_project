@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -7,6 +6,8 @@ from rest_framework.response import Response
 from recipes.permissions import IsRecipeAuthor
 from recipes.serializers import RecipeSerializer, RecipeFilterSerializer
 from recipes.manager import RecipesManager
+from recipes.notifications import update_recipe_notification,delete_recipe_notification
+from subscriptions.models import Subscription
 
 
 class CreateRecipeView(ListCreateAPIView):
@@ -27,8 +28,17 @@ class UpdateRecipeView(RetrieveUpdateDestroyAPIView):
         self.check_object_permissions(request=self.request, obj=recipe)
         return recipe
 
+    @update_recipe_notification
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    @delete_recipe_notification
     def destroy(self, request, *args, **kwargs):
-        RecipesManager.delete_recipe(kwargs.pop("recipe_id"))
+        recipe_id = kwargs.get("recipe_id")
+        RecipesManager.delete_recipe(recipe_id)
+        subs = Subscription.objects.filter(recipe_id=recipe_id)
+        if subs.exists():
+            subs.delete()
         return Response({"message": "Recipe was deleted"}, status=status.HTTP_204_NO_CONTENT)
 
 
