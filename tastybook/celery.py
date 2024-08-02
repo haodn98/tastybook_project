@@ -1,7 +1,7 @@
 from celery import Celery
 import os
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tasty.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tastybook.settings")
 
 app = Celery('tastybook')
 

@@ -17,6 +17,4 @@ RUN pip3 install -r requirements.txt
 
 COPY . $APP_HOME
 
-RUN chown -R tastybook:tastybook $APP_HOME
-
-USER tastybook
+EXPOSE 8000
