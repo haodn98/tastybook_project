@@ -30,8 +30,6 @@ class UserRegistrationSerializer(UserCreatePasswordRetypeSerializer):
         self.fields.pop("re_password", None)
         password = attrs.get("password")
         password2 = attrs.pop("re_password")
-        first_name = attrs.get("first_name")
-        surname = attrs.get("surname")
         if password != password2:
             raise ValidationError({"password": "Passwords are different"})
         try:
@@ -39,7 +37,7 @@ class UserRegistrationSerializer(UserCreatePasswordRetypeSerializer):
         except ValidationError as e:
             raise ValidationError({"email": e.detail})
         try:
-            validate_password.validate_password(password, email, first_name, surname)
+            validate_password.validate_password(password)
         except ValidationError as e:
             raise ValidationError({"password": e.detail})
         return attrs

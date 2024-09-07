@@ -12,6 +12,7 @@ class RecipeSerializer(serializers.Serializer):
     process = serializers.ListField(child=serializers.CharField(), min_length=1)
     author = serializers.IntegerField(read_only=True)
     is_vegan = serializers.BooleanField(required=False, read_only=True)
+    image = serializers.ImageField(required=False, read_only=True)
 
     def validate(self, attrs):
         ingredients = attrs["ingredients"]

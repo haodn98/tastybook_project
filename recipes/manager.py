@@ -24,7 +24,6 @@ class Recipe(BaseModel):
     created_at: str = Field(
         default_factory=lambda: datetime.now().strftime("%Y-%m-%d"))
 
-
 class RecipesManager(MongoManager):
     db = DB["recipes"]
 

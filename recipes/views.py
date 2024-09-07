@@ -3,10 +3,11 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
+from images.models import RecipeImage
 from recipes.permissions import IsRecipeAuthor
 from recipes.serializers import RecipeSerializer, RecipeFilterSerializer
 from recipes.manager import RecipesManager
-from recipes.notifications import update_recipe_notification,delete_recipe_notification
+from recipes.notifications import update_recipe_notification, delete_recipe_notification
 from subscriptions.models import Subscription
 
 
@@ -21,12 +22,16 @@ class CreateRecipeView(ListCreateAPIView):
 
 class UpdateRecipeView(RetrieveUpdateDestroyAPIView):
     serializer_class = RecipeSerializer
-    permission_classes = (IsAuthenticated, IsRecipeAuthor | IsAdminUser)
+    # permission_classes = (IsAuthenticated, IsRecipeAuthor | IsAdminUser)
 
     def get_object(self):
         recipe = RecipesManager.get_recipe(self.kwargs["recipe_id"])
-        self.check_object_permissions(request=self.request, obj=recipe)
-        return recipe
+        recipe_dict = dict(recipe)
+        recipe_image = RecipeImage.objects.filter(recipe_id=self.kwargs["recipe_id"]).first()
+        recipe_dict["image"] = str(recipe_image.image_path)
+        self.check_object_permissions(request=self.request, obj=recipe_dict)
+        print(recipe_dict)
+        return recipe_dict
 
     @update_recipe_notification
     def update(self, request, *args, **kwargs):

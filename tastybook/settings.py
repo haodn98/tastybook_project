@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'recipes',
     'products',
     'subscriptions',
+    'images',
 
 ]
 
